@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="imageSearch" ng-controller="SearchCtrl">
+  <head>
+    <meta charset="utf-8">
+    <title>Image search for {{query}}</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+    <!-- TODO(charleswalton): Update SASS watch to concat these. -->
+    <link rel="stylesheet" href="compiled-styles.css">
+    <link rel="stylesheet" href="css/normalize.css">
+  </head>
+  <body ng-cloak
+        ng-keypress="handleShortcuts($event)">
+
+    <!-- Search form. -->
+    <form class="search" ng-submit="getImages()">
+      <input type="text" name="q" ng-model="query" class="query">
+      <input type="submit">
+    </form>
+
+    <!-- List of results. -->
+    <section class="results">
+      <ol>
+        <li ng-repeat="item in results.items"
+            ng-init="src = item.media.m;">
+          <a href="javascript:;"
+             ng-click="showItem($index)">
+            <img ng-src="{{ src }}" />
+          </a>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Modal overlay. -->
+    <!-- TODO(charleswalton): Using ngClick hack to check click origination. -->
+    <section class="overlay"
+             ng-show="selectedPhotoIndex > -1"
+             ng-click="($event.currentTarget == $event.target) && closeOverlay()">
+      <button ng-show="selectedPhotoIndex != 0"
+              ng-click="showItem(selectedPhotoIndex - 1)">
+        Previous
+      </button>
+
+      <img ng-src="{{ results.items[selectedPhotoIndex].media.m }}">
+
+      <button ng-show="selectedPhotoIndex < (results.items.length - 1)"
+              ng-click="showItem(selectedPhotoIndex + 1)">
+        Next
+      </button>
+    </section>
+    
+    <!-- TODO(charleswalton): Add grunt task to concat + minify these. -->
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-resource.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
